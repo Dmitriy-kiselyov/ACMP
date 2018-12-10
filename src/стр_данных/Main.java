@@ -1,4 +1,4 @@
-//package стр_данных;
+package стр_данных;
 
 import java.io.*;
 import java.util.Arrays;
