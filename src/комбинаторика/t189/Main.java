@@ -1,4 +1,4 @@
-package комбинаторика;
+package комбинаторика.t189;
 
 import java.io.*;
 import java.util.StringTokenizer;
