@@ -1,14 +1,16 @@
-package арифм;
+package арифм.t371;
 
 import java.io.*;
-import java.util.PriorityQueue;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.function.Predicate;
 
 /**
- * Задача 832
- * Можно ли сыграть в игру
- * N до 1000, 0 <= A,B,C <= max long
+ * Задача 371
+ * Найти дружественные числа
+ * M и N до 10^6
  */
 public class Main {
 
@@ -19,144 +21,96 @@ public class Main {
         in = new MyScanner();
         out = new PrintWriter(new BufferedOutputStream(System.out), true);
 
-        int n = in.nextInt();
-        while(n-- != 0) {
-            out.println(solve(in.nextLong(), in.nextLong(), in.nextLong()) ? "Yes" : "No");
-        }
-
-//        for (int a = 0; a < 10; a++) {
-//            for (int b = 0; b < 10; b++) {
-//                for (int c = 0; c < 10; c++) {
-//                    if (!solve(a, b, c)) {
-//                        System.out.println(a + " " + b + " " + c);
-//                    }
-//                }
-//            }
-//        }
-    }
-
-//    static boolean solve(int a, int b, int c) {
-//        int[] arr = new int[] {a, b, c};
-//
-//        while(true) {
-//            if (stop(arr)) {
-//                return true;
-//            }
-//
-//            if (isBad(arr) || isBad2(arr) || isBad3(arr)) {
-//                return false;
-//            }
-//
-//            int maxI = 0, minI = 0;
-//            for (int i = 1; i < 3; i++) {
-//                if (arr[i] > arr[maxI]) {
-//                    maxI = i;
-//                }
-//            }
-//            for (int i = 1; i < 3; i++) {
-//                if (arr[i] <= arr[minI]) {
-//                    minI = i;
-//                }
-//            }
-//
-//            int restI = 3 - maxI - minI;
-//
-//            if (restI == minI || minI == maxI || restI == maxI) {
-//                System.out.println("ERROR");
-//                return false;
-//            }
-//
-//            if (arr[maxI] == 0 || arr[restI] == 0) {
-//                return false;
-//            }
-//
-//            arr[minI]++;
-//            arr[maxI]--;
-//            arr[restI]--;
-//        }
-//    }
-//
-//    static boolean stop(int[] arr) {
-//        int zeroes = 0;
-//        long rest = -1;
-//        for (long l : arr) {
-//            if (l == 0) {
-//                zeroes++;
-//            } else {
-//                rest = l;
-//            }
-//        }
-//
-//        return zeroes == 2 && rest == 1;
-//    }
-//
-//    static boolean isBad(int[] arr) {
-//        int zeroes = 0;
-//        long rest = -1;
-//        for (long l : arr) {
-//            if (l == 0) {
-//                zeroes++;
-//            } else {
-//                rest = l;
-//            }
-//        }
-//
-//        return zeroes == 2 && rest > 1;
-//    }
-//
-//    static boolean isBad2(int[] arr) {
-//        for (int a : arr) {
-//            if (a != 1) {
-//                return false;
-//            }
-//        }
-//
-//        return true;
-//    }
-//
-//    static boolean isBad3(int[] arr) {
-//        for (int a : arr) {
-//            if (a != 0) {
-//                return false;
-//            }
-//        }
-//
-//        return true;
-//    }
-
-    static boolean solve(long a, long b, long c) {
-        long[] arr = new long[] {a, b, c};
-
-        if (every(arr, a1 -> a1 % 2 == 0)) {
-            return false;
-        };
-        if (every(arr, a1 -> a1 % 2 == 1)) {
-            return false;
+        int[][] all = new int[][] {
+                {220, 284},
+                {1184, 1210},
+                {2620, 2924},
+                {5020, 5564},
+                {6232, 6368},
+                {10744, 10856},
+                {12285, 14595},
+                {17296, 18416},
+                {63020, 76084},
+                {66928, 66992},
+                {67095, 71145},
+                {69615, 87633},
+                {79750, 88730},
+                {100485, 124155},
+                {122265, 139815},
+                {122368, 123152},
+                {141664, 153176},
+                {142310, 168730},
+                {171856, 176336},
+                {176272, 180848},
+                {185368, 203432},
+                {196724, 202444},
+                {280540, 365084},
+                {308620, 389924},
+                {319550, 430402},
+                {356408, 399592},
+                {437456, 455344},
+                {469028, 486178},
+                {503056, 514736},
+                {522405, 525915},
+                {600392, 669688},
+                {609928, 686072},
+                {624184, 691256},
+                {635624, 712216},
+                {643336, 652664},
+                {667964, 783556},
+                {726104, 796696},
+                {802725, 863835},
+                {879712, 901424},
+                {898216, 980984}
         };
 
-        int zeroes = 0;
-        long rest = -1;
-        for (long l : arr) {
-            if (l == 0) {
-                zeroes++;
-            } else {
-                rest = l;
+        int lo = in.nextInt();
+        int hi = in.nextInt();
+        int cnt = 0;
+
+        for (int[] a : all) {
+            if(lo <= a[0] && a[1] <= hi) {
+                cnt++;
+                out.println(a[0] + " " + a[1]);
             }
         }
-        if (zeroes == 2 && rest > 1) {
-            return false;
-        }
 
-        return true;
+        if (cnt == 0) {
+            out.println("Absent");
+        }
     }
 
-    static boolean every(long[] arr, Predicate<Long> pred) {
-        for (long a : arr) {
-            if (!pred.test(a)) {
-                return false;
+    static void printAll(int max) {
+        out.println("int[][] all = new int[][] {");
+
+        for (int a = 2; a <= max; a++) {
+            int sum = sumOfDividors(a);
+            if (sum <= a || sum > max) {
+                continue;
+            }
+
+            if (sumOfDividors(sum) == a) {
+                out.println("{" + a + ", " + sum + "},");
             }
         }
-        return true;
+
+        out.println("};");
+    }
+
+    static int sumOfDividors(int n) {
+        int sum = 1;
+        for (int i = 2; i * i <= n; i++) {
+            if (n % i == 0) {
+                sum += i;
+
+                int rev = n / i;
+                if (rev != i) {
+                    sum += n / i;
+                }
+            }
+        }
+
+        return sum;
     }
 }
 
