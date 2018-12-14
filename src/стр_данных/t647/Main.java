@@ -1,15 +1,16 @@
-package стр_данных;
+package стр_данных.t647;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
+import java.util.function.BiFunction;
 
 /**
- * Задача 262
- * Вывести коммиссию за сложение
- * N до 10^5
+ * Задача 647
+ * Вывести длину поиска каждого запроса
+ * N, M до 65535
  */
 public class Main {
 
@@ -21,25 +22,89 @@ public class Main {
         out = new PrintWriter(new BufferedOutputStream(System.out), true);
 
         int n = in.nextInt();
-        long[] arr = in.nextLongs(n);
+        int m = in.nextInt();
 
-        PriorityQueue<Long> queue = new PriorityQueue<>();
-        for (long a : arr) {
-            queue.add(a);
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 1; i <= n; i++) {
+            map.put(i, n - i);
         }
 
-        double commission = 0;
-        while (queue.size() > 1) {
-            long a = queue.poll();
-            long b = queue.poll();
-            long sum = a + b;
-            commission += sum * 0.05;
-            queue.add(sum);
+        SegmentTree<Integer> tree = new SegmentTree<>(n + m, 0, (a, b) -> a + b);
+        for (int i = 0; i < n; i++) {
+            tree.set(i, 1);
         }
 
-        String ans = String.format("%.2f\n", commission).replace(',', '.');
-        out.printf(ans);
+        while(m-- != 0) {
+            int q = in.nextInt();
+            int pos = map.get(q);
+            int zeroes = (n - pos) - tree.get(pos, n - 1);
+
+            out.print(n - pos - zeroes + " ");
+
+            map.put(q, n);
+            tree.set(pos, 0);
+            tree.set(n, 1);
+            n++;
+        }
+        out.println();
     }
+}
+
+class SegmentTree<T> {
+
+    private int size;
+    private T[] tree;
+    private T initial;
+    private BiFunction<T, T, T> function;
+
+    public SegmentTree(int size, T initial, BiFunction<T, T, T> function) {
+        this.size = closest2(size);
+        this.initial = initial;
+        this.function = function;
+        tree = (T[]) new Object[this.size * 2];
+
+        Arrays.fill(tree, this.size, tree.length, initial);
+        for (int i = this.size - 1; i > 0; i--) {
+            tree[i] = function.apply(tree[i * 2], tree[i * 2 + 1]);
+        }
+    }
+
+    private boolean isLowLevel(int level) {
+        return level >= size;
+    }
+
+    public T get(int from, int to) {
+        return get(0, size - 1, 1, from, to);
+    }
+
+    public T get(int lo, int hi, int i, int from, int to) {
+        if (from > to)
+            return initial;
+        if (lo == from && hi == to)
+            return tree[i];
+
+        int mid = (lo + hi) / 2;
+        return function.apply(get(lo, mid, 2 * i, from, Math.min(to, mid)),
+                get(mid + 1, hi, 2 * i + 1, Math.max(from, mid + 1), to));
+    }
+
+    public void set(int i, T v) {
+        i += size;
+        tree[i] = v;
+        update(i / 2);
+    }
+
+    private void update(int i) {
+        while (i != 0) {
+            tree[i] = function.apply(tree[2 * i], tree[2 * i + 1]);
+            i /= 2;
+        }
+    }
+
+    private int closest2(int a) {
+        return 1 << (int) (Math.log(a - 1) / Math.log(2) + 1.0000000000000007);
+    }
+
 }
 
 class MyScanner implements Closeable {
