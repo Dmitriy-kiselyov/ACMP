@@ -1,4 +1,4 @@
-package строки;
+package строки.t199;
 
 import java.io.*;
 import java.util.StringTokenizer;
