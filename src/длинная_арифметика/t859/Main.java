@@ -1,4 +1,4 @@
-package длинная_арифметика;
+package длинная_арифметика.t859;
 
 import java.io.*;
 import java.util.*;
